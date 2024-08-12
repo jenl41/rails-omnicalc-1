@@ -22,10 +22,10 @@ class CalcController < ApplicationController
 
   def root_results
 
-    @the_num = params.fetch("number").to_f
+    @the_num_root = params.fetch("user_number").to_f
 
-@the_result = @the_num ** 0.5
-  
+  @the_result_root = @the_num_root ** 0.5
+
     render({ :template => "calculations/root_results"})
   end
 
@@ -38,11 +38,11 @@ class CalcController < ApplicationController
 
   def payment_results
 
-  @the_num_apr = params.fetch("user_apr").to_f
+  @the_num_apr = params.fetch("user_apr").to_f.round(4)
   @the_num_principal = params.fetch("user_pv").to_f
-  @the_num_years = params.fetch("user_years").to_i*12
+  @the_num_years = params.fetch("user_years").to_i
 
-  @the_result_payment = (((@the_num_apr/100)/12) * @the_num_principal)/@the_num_years
+  @the_result_payment = (@the_num_principal * ((@the_num_apr/100/12) * (1 + (@the_num_apr/100/12))**(@the_num_years*12)) / ((1 + (@the_num_apr/100/12))**(@the_num_years*12) - 1)).to_fs(:currency)
   
     render({ :template => "calculations/payment_results"})
   end
